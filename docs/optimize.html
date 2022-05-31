@@ -229,11 +229,24 @@ class Model(ModelUtils):
 <dl>
 <dt id="scx.optimize.Model"><code class="flex name class">
 <span>class <span class="ident">Model</span></span>
-<span>(</span><span>**kwargs)</span>
+<span>(</span><span>name: str, type: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>partial(func, <em>args, </em>*keywords) - new function with partial application
-of the given arguments and keywords.</p></div>
+<div class="desc"><p>Initialize a new optimization model object.</p>
+<p>Requires:</p>
+<ul>
+<li><code>name</code>:<ul>
+<li>Type: str</li>
+<li>What: The name of this optimization model</li>
+</ul>
+</li>
+<li><code>type</code>:<ul>
+<li>Type: str</li>
+<li>What: The type of optimization to perform</li>
+<li>Options: ['maximize','minimize']</li>
+</ul>
+</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -374,19 +387,176 @@ class Model(ModelUtils):
 <li><a title="scx.optimize.ModelUtils" href="#scx.optimize.ModelUtils">ModelUtils</a></li>
 <li><a title="scx.utils.Error" href="utils.html#scx.utils.Error">Error</a></li>
 </ul>
-<h3>Class variables</h3>
+<h3>Methods</h3>
 <dl>
-<dt id="scx.optimize.Model.add_constraint"><code class="name">var <span class="ident">add_constraint</span></code></dt>
+<dt id="scx.optimize.Model.add_constraint"><code class="name flex">
+<span>def <span class="ident">add_constraint</span></span>(<span>self, fn, name: [<class 'str'>, <class 'NoneType'>] = None)</span>
+</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Add a constraint function to the current model object. Each model can have unlimited constraints.</p>
+<p>Requires:</p>
+<ul>
+<li><code>fn</code>:<ul>
+<li>Type: function</li>
+<li>What: The pythonic version of the objective function</li>
+<li>Note: This function should have pythonic (comparison operators)[<a href="https://docs.python.org/3/reference/expressions.html#comparisons]">https://docs.python.org/3/reference/expressions.html#comparisons]</a></li>
+</ul>
+</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>name</code>:<ul>
+<li>Type: str</li>
+<li>What: The name of this constraint</li>
+<li>Default: None</li>
+</ul>
+</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_constraint(self, fn, name: [str, type(None)] = None):
+    &#34;&#34;&#34;
+    Add a constraint function to the current model object. Each model can have unlimited constraints.
+
+    Requires:
+
+    - `fn`:
+        - Type: function
+        - What: The pythonic version of the objective function
+        - Note: This function should have pythonic (comparison operators)[https://docs.python.org/3/reference/expressions.html#comparisons]
+
+    Optional:
+
+    - `name`:
+        - Type: str
+        - What: The name of this constraint
+        - Default: None
+
+
+    &#34;&#34;&#34;
+    # Validity Checks
+    if not self.__objective_added__:
+        self.exception(
+            &#34;An objective function should be added to this model before adding constraints.&#34;
+        )
+    if self.__solved__:
+        self.exception(
+            &#34;This model has already been solved. You can not add any more constraints.&#34;
+        )
+
+    # Add the constraint to the model
+    if name != None:
+        self.model += (fn, name)
+    else:
+        self.model += fn</code></pre>
+</details>
 </dd>
-<dt id="scx.optimize.Model.add_objective"><code class="name">var <span class="ident">add_objective</span></code></dt>
+<dt id="scx.optimize.Model.add_objective"><code class="name flex">
+<span>def <span class="ident">add_objective</span></span>(<span>self, fn)</span>
+</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Add the objective function to the current model object. Each model can only have one objective function.</p>
+<p>Requires:</p>
+<ul>
+<li><code>fn</code>:<ul>
+<li>Type: function</li>
+<li>What: The pythonic version of the objective function</li>
+<li>Note: This function should <strong>not</strong> have any pythonic (comparison operators)[<a href="https://docs.python.org/3/reference/expressions.html#comparisons]">https://docs.python.org/3/reference/expressions.html#comparisons]</a></li>
+</ul>
+</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_objective(self, fn):
+    &#34;&#34;&#34;
+    Add the objective function to the current model object. Each model can only have one objective function.
+
+    Requires:
+
+    - `fn`:
+        - Type: function
+        - What: The pythonic version of the objective function
+        - Note: This function should **not** have any pythonic (comparison operators)[https://docs.python.org/3/reference/expressions.html#comparisons]
+    &#34;&#34;&#34;
+    # Validity Checks
+    if self.__objective_added__:
+        self.exception(
+            &#34;An objective function has already been added to this model.&#34;
+        )
+
+    # Add the objective function to the model
+    self.model += fn
+
+    # Update the __objective_added__ validation attribute
+    self.__objective_added__ = True</code></pre>
+</details>
 </dd>
-<dt id="scx.optimize.Model.solve"><code class="name">var <span class="ident">solve</span></code></dt>
+<dt id="scx.optimize.Model.solve"><code class="name flex">
+<span>def <span class="ident">solve</span></span>(<span>self, pulp_log: bool = False, except_on_infeasible: bool = True)</span>
+</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Solve the current model object.</p>
+<p>Optional:</p>
+<ul>
+<li><code>pulp_log</code>:<ul>
+<li>Type: bool</li>
+<li>What: A flag to indicate if the relevant pulp / coinOr solver log should be logged in the console. This can be helpful for debugging.</li>
+<li>Default: False</li>
+</ul>
+</li>
+<li><code>except_on_infeasible</code>:<ul>
+<li>Type: bool</li>
+<li>What: A flag to indicate if the model should throw an exception if the optimization model is infeasible. If false, the model will automatically relax constraints to generate an infeasible solution.</li>
+<li>Default: True</li>
+</ul>
+</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def solve(self, pulp_log: bool = False, except_on_infeasible: bool = True):
+    &#34;&#34;&#34;
+    Solve the current model object.
+
+    Optional:
+
+    - `pulp_log`:
+        - Type: bool
+        - What: A flag to indicate if the relevant pulp / coinOr solver log should be logged in the console. This can be helpful for debugging.
+        - Default: False
+    - `except_on_infeasible`:
+        - Type: bool
+        - What: A flag to indicate if the model should throw an exception if the optimization model is infeasible. If false, the model will automatically relax constraints to generate an infeasible solution.
+        - Default: True
+    &#34;&#34;&#34;
+    if self.__solved__:
+        self.exception(
+            &#34;This model has already been solved. You can not add any more constraints.&#34;
+        )
+    # Solve the model
+    self.model.solve(pulp.PULP_CBC_CMD(msg=(3 if pulp_log else 0)))
+
+    if self.model.status == -1:
+        if except_on_infeasible:
+            self.exception(
+                &#34;The current model is infeasible and can not be solved.&#34;
+            )
+        else:
+            self.warn(
+                &#34;The current model is infeasible and can not be solved. Constraints have been relaxed to provide a solution anyway.&#34;
+            )
+    self.__solved__ = True
+    self.outputs = {
+        &#34;status&#34;: f&#34;{pulp.LpStatus[self.model.status]}&#34;,
+        &#34;objective&#34;: self.model.objective.value(),
+        &#34;variables&#34;: {i.name: i.value() for i in self.model.variables()},
+    }</code></pre>
+</details>
 </dd>
 </dl>
 <h3>Inherited members</h3>
