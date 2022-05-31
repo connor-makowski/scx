@@ -2,13 +2,13 @@ from distutils.core import setup
 setup(
   name = 'scx',
   packages = ['scx'],
-  version = '0.0.1',
+  version = '0.0.2',
   license='MIT',
   description = 'MIT Supply Chain Python Package',
   author = 'Connor Makowski',
   author_email = 'conmak@mit.edu',
   url = 'https://github.com/connor-makowski/scx',
-  download_url = 'https://github.com/connor-makowski/scx/dist/scx-0.0.1.tar.gz',
+  download_url = 'https://github.com/connor-makowski/scx/dist/scx-0.0.2.tar.gz',
   keywords = [],
   install_requires=["PuLP==2.6.0", "type_enforced>=0.0.4"],
   classifiers=[

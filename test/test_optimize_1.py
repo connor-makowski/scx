@@ -1,8 +1,8 @@
-from scx.optimize import Model, Variable
+from scx.optimize import Model
 
 # Create variables
-sugary_amt = Variable(name="sugary", lowBound=0)
-regular_amt = Variable(name="regular", lowBound=0)
+sugary_amt = Model.variable(name="sugary", lowBound=0)
+regular_amt = Model.variable(name="regular", lowBound=0)
 
 # Initialize the model
 model = Model(name="Crazy_Cereal", type='maximize')

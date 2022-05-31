@@ -5,3 +5,4 @@ pdoc3==0.9.2
 black==22.3.0
 autoflake==1.4
 twine==4.0.0
+-e .
