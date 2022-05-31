@@ -101,7 +101,7 @@ class Model(ModelUtils):
         - `fn`:
             - Type: function
             - What: The pythonic version of the objective function
-            - Note: This function should **not** have any pythonic (comparison operators)[https://docs.python.org/3/reference/expressions.html#comparisons]
+            - Note: This function should **not** have any pythonic [comparison operators](https://docs.python.org/3/reference/expressions.html#comparisons)
         """
         # Validity Checks
         if self.__objective_added__:
@@ -124,7 +124,7 @@ class Model(ModelUtils):
         - `fn`:
             - Type: function
             - What: The pythonic version of the objective function
-            - Note: This function should have pythonic (comparison operators)[https://docs.python.org/3/reference/expressions.html#comparisons]
+            - Note: This function should have pythonic [comparison operators](https://docs.python.org/3/reference/expressions.html#comparison)
 
         Optional:
 
