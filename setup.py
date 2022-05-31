@@ -10,7 +10,7 @@ setup(
   url = 'https://github.com/connor-makowski/scx',
   download_url = 'https://github.com/connor-makowski/scx/dist/scx-0.0.2.tar.gz',
   keywords = [],
-  install_requires=["PuLP==2.6.0", "type_enforced>=0.0.4"],
+  install_requires=["PuLP==2.6.0", "type_enforced>=0.0.5"],
   classifiers=[
     'Development Status :: 3 - Alpha',
     'Intended Audience :: Developers',
