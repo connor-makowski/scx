@@ -2,6 +2,7 @@ import sys
 
 
 class Error:
+    @classmethod
     def warn(self, message, depth=0):
         """
         Usage:
@@ -26,6 +27,7 @@ class Error:
             f"(Warning for `{self.__class__.__name__}.{sys._getframe(depth).f_back.f_code.co_name}`): {message}"
         )
 
+    @classmethod
     def exception(self, message, depth=0):
         """
         Usage:

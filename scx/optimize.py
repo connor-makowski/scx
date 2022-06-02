@@ -1,5 +1,4 @@
-import pulp
-import type_enforced
+import pulp, type_enforced
 from .utils import Error
 
 
