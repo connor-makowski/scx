@@ -1,3 +1,7 @@
+"""
+The statistics package is currently under construction
+"""
+
 import functools
 from .utils import Error
 

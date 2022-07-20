@@ -37,9 +37,9 @@ class ModelUtils(Error):
             - Options: ['Continuous','Binary','Integer']
         """
         kwargs = {"name": name, "cat": cat}
-        if lowBound:
+        if lowBound is not None:
             kwargs["lowBound"] = lowBound
-        if upBound:
+        if upBound is not None:
             kwargs["upBound"] = upBound
         return pulp.LpVariable(**kwargs)
 

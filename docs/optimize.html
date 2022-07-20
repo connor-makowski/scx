@@ -26,8 +26,7 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import pulp
-import type_enforced
+<pre><code class="python">import pulp, type_enforced
 from .utils import Error
 
 
@@ -66,9 +65,9 @@ class ModelUtils(Error):
             - Options: [&#39;Continuous&#39;,&#39;Binary&#39;,&#39;Integer&#39;]
         &#34;&#34;&#34;
         kwargs = {&#34;name&#34;: name, &#34;cat&#34;: cat}
-        if lowBound:
+        if lowBound is not None:
             kwargs[&#34;lowBound&#34;] = lowBound
-        if upBound:
+        if upBound is not None:
             kwargs[&#34;upBound&#34;] = upBound
         return pulp.LpVariable(**kwargs)
 
@@ -615,9 +614,9 @@ class ModelUtils(Error):
             - Options: [&#39;Continuous&#39;,&#39;Binary&#39;,&#39;Integer&#39;]
         &#34;&#34;&#34;
         kwargs = {&#34;name&#34;: name, &#34;cat&#34;: cat}
-        if lowBound:
+        if lowBound is not None:
             kwargs[&#34;lowBound&#34;] = lowBound
-        if upBound:
+        if upBound is not None:
             kwargs[&#34;upBound&#34;] = upBound
         return pulp.LpVariable(**kwargs)
 
@@ -747,9 +746,9 @@ def variable(
         - Options: [&#39;Continuous&#39;,&#39;Binary&#39;,&#39;Integer&#39;]
     &#34;&#34;&#34;
     kwargs = {&#34;name&#34;: name, &#34;cat&#34;: cat}
-    if lowBound:
+    if lowBound is not None:
         kwargs[&#34;lowBound&#34;] = lowBound
-    if upBound:
+    if upBound is not None:
         kwargs[&#34;upBound&#34;] = upBound
     return pulp.LpVariable(**kwargs)</code></pre>
 </details>

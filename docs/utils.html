@@ -30,6 +30,7 @@
 
 
 class Error:
+    @classmethod
     def warn(self, message, depth=0):
         &#34;&#34;&#34;
         Usage:
@@ -54,6 +55,7 @@ class Error:
             f&#34;(Warning for `{self.__class__.__name__}.{sys._getframe(depth).f_back.f_code.co_name}`): {message}&#34;
         )
 
+    @classmethod
     def exception(self, message, depth=0):
         &#34;&#34;&#34;
         Usage:
@@ -94,6 +96,7 @@ class Error:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Error:
+    @classmethod
     def warn(self, message, depth=0):
         &#34;&#34;&#34;
         Usage:
@@ -118,6 +121,7 @@ class Error:
             f&#34;(Warning for `{self.__class__.__name__}.{sys._getframe(depth).f_back.f_code.co_name}`): {message}&#34;
         )
 
+    @classmethod
     def exception(self, message, depth=0):
         &#34;&#34;&#34;
         Usage:
@@ -141,11 +145,12 @@ class Error:
 <h3>Subclasses</h3>
 <ul class="hlist">
 <li><a title="scx.optimize.ModelUtils" href="optimize.html#scx.optimize.ModelUtils">ModelUtils</a></li>
+<li><a title="scx.statistics.SummaryUtils" href="statistics.html#scx.statistics.SummaryUtils">SummaryUtils</a></li>
 </ul>
-<h3>Methods</h3>
+<h3>Static methods</h3>
 <dl>
 <dt id="scx.utils.Error.exception"><code class="name flex">
-<span>def <span class="ident">exception</span></span>(<span>self, message, depth=0)</span>
+<span>def <span class="ident">exception</span></span>(<span>message, depth=0)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Usage:
@@ -168,7 +173,8 @@ Optional:</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def exception(self, message, depth=0):
+<pre><code class="python">@classmethod
+def exception(self, message, depth=0):
     &#34;&#34;&#34;
     Usage:
     - Creates a class based exception message
@@ -190,7 +196,7 @@ Optional:</p>
 </details>
 </dd>
 <dt id="scx.utils.Error.warn"><code class="name flex">
-<span>def <span class="ident">warn</span></span>(<span>self, message, depth=0)</span>
+<span>def <span class="ident">warn</span></span>(<span>message, depth=0)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Usage:</p>
@@ -219,7 +225,8 @@ Optional:</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def warn(self, message, depth=0):
+<pre><code class="python">@classmethod
+def warn(self, message, depth=0):
     &#34;&#34;&#34;
     Usage:
 
