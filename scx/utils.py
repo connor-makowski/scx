@@ -31,11 +31,15 @@ class Error:
     def exception(self, message, depth=0):
         """
         Usage:
+
         - Creates a class based exception message
+
         Requires:
+
         - `message`:
             - Type: str
             - What: The message to raise an exception with
+
         Optional:
 
         - `depth`:

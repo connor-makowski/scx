@@ -1,5 +1,5 @@
 """
-The statistics package is currently under construction
+NOTE: The statistics package is currently under construction
 """
 
 import functools
