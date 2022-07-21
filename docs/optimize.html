@@ -87,7 +87,7 @@ class ModelUtils(Error):
 
 @type_enforced.Enforcer
 class Model(ModelUtils):
-    def __init__(self, name: str, type: str):
+    def __init__(self, name: str, sense: [str, type(None)]):
         &#34;&#34;&#34;
         Initialize a new optimization model object.
 
@@ -96,10 +96,11 @@ class Model(ModelUtils):
         - `name`:
             - Type: str
             - What: The name of this optimization model
-        - `type`:
+        - `sense`:
             - Type: str
             - What: The type of optimization to perform
-            - Options: [&#39;maximize&#39;,&#39;minimize&#39;]
+            - Options: [&#39;maximize&#39;,&#39;minimize&#39;,None]
+            - Note: If None, no optimization is performed, but a feasible solution is searched for given the constraints
         &#34;&#34;&#34;
         # Validation Attributes
         self.__solved__ = False
@@ -107,16 +108,20 @@ class Model(ModelUtils):
 
         # Standard attributes
         self.name = name
+        self.sense = sense
         self.outputs = {&#34;status&#34;: &#34;Not Solved&#34;}
 
         # Create PuLP Model
-        if type.lower() == &#34;maximize&#34;:
+        if sense == None:
+            self.model = pulp.LpProblem(name=self.name)
+            self.__objective_added__ = True
+        elif sense.lower() == &#34;maximize&#34;:
             self.model = pulp.LpProblem(name=self.name, sense=pulp.LpMaximize)
-        elif type.lower() == &#34;minimize&#34;:
+        elif sense.lower() == &#34;minimize&#34;:
             self.model = pulp.LpProblem(name=self.name, sense=pulp.LpMinimize)
         else:
             self.exception(
-                &#34;When creating a model, `type` must be specified as either `maximize` or `minimize`.&#34;
+                &#34;When creating a model, `sense` must be specified as either `&#39;maximize&#39;`, `&#39;minimize&#39;` or `None`.&#34;
             )
 
     def add_objective(self, fn):
@@ -132,9 +137,14 @@ class Model(ModelUtils):
         &#34;&#34;&#34;
         # Validity Checks
         if self.__objective_added__:
-            self.exception(
-                &#34;An objective function has already been added to this model.&#34;
-            )
+            if self.sense == None:
+                self.exception(
+                    &#34;Models with `sense=None` should not have an objective function.&#34;
+                )
+            else:
+                self.exception(
+                    &#34;An objective function has already been added to this model.&#34;
+                )
 
         # Add the objective function to the model
         self.model += fn
@@ -178,7 +188,13 @@ class Model(ModelUtils):
         else:
             self.model += fn
 
-    def solve(self, pulp_log: bool = False, except_on_infeasible: bool = True):
+    def solve(
+        self,
+        pulp_log: bool = False,
+        except_on_infeasible: bool = True,
+        get_duals: bool = False,
+        get_slacks: bool = False,
+    ):
         &#34;&#34;&#34;
         Solve the current model object.
 
@@ -192,6 +208,14 @@ class Model(ModelUtils):
             - Type: bool
             - What: A flag to indicate if the model should throw an exception if the optimization model is infeasible. If false, the model will automatically relax constraints to generate an infeasible solution.
             - Default: True
+        - `get_duals`:
+            - Type: bool
+            - What: A flag to indicate if the dual values for constraints should be added to the normal `outputs`.
+            - Default: False
+        - `get_slacks`:
+            - Type: bool
+            - What: A flag to indicate if the slack values for constraints should be added to the normal `outputs`.
+            - Default: False
         &#34;&#34;&#34;
         if self.__solved__:
             self.exception(
@@ -212,9 +236,52 @@ class Model(ModelUtils):
         self.__solved__ = True
         self.outputs = {
             &#34;status&#34;: f&#34;{pulp.LpStatus[self.model.status]}&#34;,
-            &#34;objective&#34;: self.model.objective.value(),
+            &#34;objective&#34;: self.model.objective.value()
+            if self.sense != None
+            else None,
             &#34;variables&#34;: {i.name: i.value() for i in self.model.variables()},
-        }</code></pre>
+        }
+        if get_duals:
+            self.get_duals()
+        if get_slacks:
+            self.get_slacks()
+
+    def get_slacks(self):
+        &#34;&#34;&#34;
+        Adds slack values to the model outputs dictionary as `slacks` and also returns those slack values as an dictonary.
+
+        Notes:
+
+            - The model must be solved before this method can be used
+            - Slack values might not be avaialable depending on the solver that is used
+        &#34;&#34;&#34;
+        if not self.__solved__:
+            self.exception(
+                &#34;The current model must be solved before getting slacks.&#34;
+            )
+        self.outputs[&#34;slacks&#34;] = {
+            key: value.slack for key, value in self.model.constraints.items()
+        }
+        return self.outputs[&#34;slacks&#34;]
+
+    def get_duals(self):
+        &#34;&#34;&#34;
+        Adds dual values to the model outputs dictionary as `duals` and also returns those dual values as an dictonary.
+
+        Notes:
+
+            - The model must be solved before this method can be used
+            - Dual values will be 0 or None for non LP models (EG MILPs)
+            - Dual values might not be avaialable depending on the solver that is used
+        &#34;&#34;&#34;
+        if not self.__solved__:
+            self.exception(
+                &#34;The current model must be solved before getting duals.&#34;
+            )
+        self.outputs[&#34;duals&#34;] = {
+            key: value.pi for key, value in self.model.constraints.items()
+        }
+        return self.outputs[&#34;duals&#34;]</code></pre>
 </details>
 </section>
 <section>
@@ -228,7 +295,7 @@ class Model(ModelUtils):
 <dl>
 <dt id="scx.optimize.Model"><code class="flex name class">
 <span>class <span class="ident">Model</span></span>
-<span>(</span><span>name: str, type: str)</span>
+<span>(</span><span>name: str, sense: [<class 'str'>, <class 'NoneType'>])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Initialize a new optimization model object.</p>
@@ -239,10 +306,11 @@ class Model(ModelUtils):
 <li>What: The name of this optimization model</li>
 </ul>
 </li>
-<li><code>type</code>:<ul>
+<li><code>sense</code>:<ul>
 <li>Type: str</li>
 <li>What: The type of optimization to perform</li>
-<li>Options: ['maximize','minimize']</li>
+<li>Options: ['maximize','minimize',None]</li>
+<li>Note: If None, no optimization is performed, but a feasible solution is searched for given the constraints</li>
 </ul>
 </li>
 </ul></div>
@@ -252,7 +320,7 @@ class Model(ModelUtils):
 </summary>
 <pre><code class="python">@type_enforced.Enforcer
 class Model(ModelUtils):
-    def __init__(self, name: str, type: str):
+    def __init__(self, name: str, sense: [str, type(None)]):
         &#34;&#34;&#34;
         Initialize a new optimization model object.
 
@@ -261,10 +329,11 @@ class Model(ModelUtils):
         - `name`:
             - Type: str
             - What: The name of this optimization model
-        - `type`:
+        - `sense`:
             - Type: str
             - What: The type of optimization to perform
-            - Options: [&#39;maximize&#39;,&#39;minimize&#39;]
+            - Options: [&#39;maximize&#39;,&#39;minimize&#39;,None]
+            - Note: If None, no optimization is performed, but a feasible solution is searched for given the constraints
         &#34;&#34;&#34;
         # Validation Attributes
         self.__solved__ = False
@@ -272,16 +341,20 @@ class Model(ModelUtils):
 
         # Standard attributes
         self.name = name
+        self.sense = sense
         self.outputs = {&#34;status&#34;: &#34;Not Solved&#34;}
 
         # Create PuLP Model
-        if type.lower() == &#34;maximize&#34;:
+        if sense == None:
+            self.model = pulp.LpProblem(name=self.name)
+            self.__objective_added__ = True
+        elif sense.lower() == &#34;maximize&#34;:
             self.model = pulp.LpProblem(name=self.name, sense=pulp.LpMaximize)
-        elif type.lower() == &#34;minimize&#34;:
+        elif sense.lower() == &#34;minimize&#34;:
             self.model = pulp.LpProblem(name=self.name, sense=pulp.LpMinimize)
         else:
             self.exception(
-                &#34;When creating a model, `type` must be specified as either `maximize` or `minimize`.&#34;
+                &#34;When creating a model, `sense` must be specified as either `&#39;maximize&#39;`, `&#39;minimize&#39;` or `None`.&#34;
             )
 
     def add_objective(self, fn):
@@ -297,9 +370,14 @@ class Model(ModelUtils):
         &#34;&#34;&#34;
         # Validity Checks
         if self.__objective_added__:
-            self.exception(
-                &#34;An objective function has already been added to this model.&#34;
-            )
+            if self.sense == None:
+                self.exception(
+                    &#34;Models with `sense=None` should not have an objective function.&#34;
+                )
+            else:
+                self.exception(
+                    &#34;An objective function has already been added to this model.&#34;
+                )
 
         # Add the objective function to the model
         self.model += fn
@@ -343,7 +421,13 @@ class Model(ModelUtils):
         else:
             self.model += fn
 
-    def solve(self, pulp_log: bool = False, except_on_infeasible: bool = True):
+    def solve(
+        self,
+        pulp_log: bool = False,
+        except_on_infeasible: bool = True,
+        get_duals: bool = False,
+        get_slacks: bool = False,
+    ):
         &#34;&#34;&#34;
         Solve the current model object.
 
@@ -357,6 +441,14 @@ class Model(ModelUtils):
             - Type: bool
             - What: A flag to indicate if the model should throw an exception if the optimization model is infeasible. If false, the model will automatically relax constraints to generate an infeasible solution.
             - Default: True
+        - `get_duals`:
+            - Type: bool
+            - What: A flag to indicate if the dual values for constraints should be added to the normal `outputs`.
+            - Default: False
+        - `get_slacks`:
+            - Type: bool
+            - What: A flag to indicate if the slack values for constraints should be added to the normal `outputs`.
+            - Default: False
         &#34;&#34;&#34;
         if self.__solved__:
             self.exception(
@@ -377,9 +469,52 @@ class Model(ModelUtils):
         self.__solved__ = True
         self.outputs = {
             &#34;status&#34;: f&#34;{pulp.LpStatus[self.model.status]}&#34;,
-            &#34;objective&#34;: self.model.objective.value(),
+            &#34;objective&#34;: self.model.objective.value()
+            if self.sense != None
+            else None,
             &#34;variables&#34;: {i.name: i.value() for i in self.model.variables()},
-        }</code></pre>
+        }
+        if get_duals:
+            self.get_duals()
+        if get_slacks:
+            self.get_slacks()
+
+    def get_slacks(self):
+        &#34;&#34;&#34;
+        Adds slack values to the model outputs dictionary as `slacks` and also returns those slack values as an dictonary.
+
+        Notes:
+
+            - The model must be solved before this method can be used
+            - Slack values might not be avaialable depending on the solver that is used
+        &#34;&#34;&#34;
+        if not self.__solved__:
+            self.exception(
+                &#34;The current model must be solved before getting slacks.&#34;
+            )
+        self.outputs[&#34;slacks&#34;] = {
+            key: value.slack for key, value in self.model.constraints.items()
+        }
+        return self.outputs[&#34;slacks&#34;]
+
+    def get_duals(self):
+        &#34;&#34;&#34;
+        Adds dual values to the model outputs dictionary as `duals` and also returns those dual values as an dictonary.
+
+        Notes:
+
+            - The model must be solved before this method can be used
+            - Dual values will be 0 or None for non LP models (EG MILPs)
+            - Dual values might not be avaialable depending on the solver that is used
+        &#34;&#34;&#34;
+        if not self.__solved__:
+            self.exception(
+                &#34;The current model must be solved before getting duals.&#34;
+            )
+        self.outputs[&#34;duals&#34;] = {
+            key: value.pi for key, value in self.model.constraints.items()
+        }
+        return self.outputs[&#34;duals&#34;]</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -483,9 +618,14 @@ class Model(ModelUtils):
     &#34;&#34;&#34;
     # Validity Checks
     if self.__objective_added__:
-        self.exception(
-            &#34;An objective function has already been added to this model.&#34;
-        )
+        if self.sense == None:
+            self.exception(
+                &#34;Models with `sense=None` should not have an objective function.&#34;
+            )
+        else:
+            self.exception(
+                &#34;An objective function has already been added to this model.&#34;
+            )
 
     # Add the objective function to the model
     self.model += fn
@@ -494,8 +634,76 @@ class Model(ModelUtils):
     self.__objective_added__ = True</code></pre>
 </details>
 </dd>
+<dt id="scx.optimize.Model.get_duals"><code class="name flex">
+<span>def <span class="ident">get_duals</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Adds dual values to the model outputs dictionary as <code>duals</code> and also returns those dual values as an dictonary.</p>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>The model must be solved before this method can be used</li>
+<li>Dual values will be 0 or None for non LP models (EG MILPs)</li>
+<li>Dual values might not be avaialable depending on the solver that is used</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_duals(self):
+    &#34;&#34;&#34;
+    Adds dual values to the model outputs dictionary as `duals` and also returns those dual values as an dictonary.
+
+    Notes:
+
+        - The model must be solved before this method can be used
+        - Dual values will be 0 or None for non LP models (EG MILPs)
+        - Dual values might not be avaialable depending on the solver that is used
+    &#34;&#34;&#34;
+    if not self.__solved__:
+        self.exception(
+            &#34;The current model must be solved before getting duals.&#34;
+        )
+    self.outputs[&#34;duals&#34;] = {
+        key: value.pi for key, value in self.model.constraints.items()
+    }
+    return self.outputs[&#34;duals&#34;]</code></pre>
+</details>
+</dd>
+<dt id="scx.optimize.Model.get_slacks"><code class="name flex">
+<span>def <span class="ident">get_slacks</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Adds slack values to the model outputs dictionary as <code>slacks</code> and also returns those slack values as an dictonary.</p>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>The model must be solved before this method can be used</li>
+<li>Slack values might not be avaialable depending on the solver that is used</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_slacks(self):
+    &#34;&#34;&#34;
+    Adds slack values to the model outputs dictionary as `slacks` and also returns those slack values as an dictonary.
+
+    Notes:
+
+        - The model must be solved before this method can be used
+        - Slack values might not be avaialable depending on the solver that is used
+    &#34;&#34;&#34;
+    if not self.__solved__:
+        self.exception(
+            &#34;The current model must be solved before getting slacks.&#34;
+        )
+    self.outputs[&#34;slacks&#34;] = {
+        key: value.slack for key, value in self.model.constraints.items()
+    }
+    return self.outputs[&#34;slacks&#34;]</code></pre>
+</details>
+</dd>
 <dt id="scx.optimize.Model.solve"><code class="name flex">
-<span>def <span class="ident">solve</span></span>(<span>self, pulp_log: bool = False, except_on_infeasible: bool = True)</span>
+<span>def <span class="ident">solve</span></span>(<span>self, pulp_log: bool = False, except_on_infeasible: bool = True, get_duals: bool = False, get_slacks: bool = False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Solve the current model object.</p>
@@ -513,12 +721,30 @@ class Model(ModelUtils):
 <li>Default: True</li>
 </ul>
 </li>
+<li><code>get_duals</code>:<ul>
+<li>Type: bool</li>
+<li>What: A flag to indicate if the dual values for constraints should be added to the normal <code>outputs</code>.</li>
+<li>Default: False</li>
+</ul>
+</li>
+<li><code>get_slacks</code>:<ul>
+<li>Type: bool</li>
+<li>What: A flag to indicate if the slack values for constraints should be added to the normal <code>outputs</code>.</li>
+<li>Default: False</li>
+</ul>
+</li>
 </ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def solve(self, pulp_log: bool = False, except_on_infeasible: bool = True):
+<pre><code class="python">def solve(
+    self,
+    pulp_log: bool = False,
+    except_on_infeasible: bool = True,
+    get_duals: bool = False,
+    get_slacks: bool = False,
+):
     &#34;&#34;&#34;
     Solve the current model object.
 
@@ -532,6 +758,14 @@ class Model(ModelUtils):
         - Type: bool
         - What: A flag to indicate if the model should throw an exception if the optimization model is infeasible. If false, the model will automatically relax constraints to generate an infeasible solution.
         - Default: True
+    - `get_duals`:
+        - Type: bool
+        - What: A flag to indicate if the dual values for constraints should be added to the normal `outputs`.
+        - Default: False
+    - `get_slacks`:
+        - Type: bool
+        - What: A flag to indicate if the slack values for constraints should be added to the normal `outputs`.
+        - Default: False
     &#34;&#34;&#34;
     if self.__solved__:
         self.exception(
@@ -552,9 +786,15 @@ class Model(ModelUtils):
     self.__solved__ = True
     self.outputs = {
         &#34;status&#34;: f&#34;{pulp.LpStatus[self.model.status]}&#34;,
-        &#34;objective&#34;: self.model.objective.value(),
+        &#34;objective&#34;: self.model.objective.value()
+        if self.sense != None
+        else None,
         &#34;variables&#34;: {i.name: i.value() for i in self.model.variables()},
-    }</code></pre>
+    }
+    if get_duals:
+        self.get_duals()
+    if get_slacks:
+        self.get_slacks()</code></pre>
 </details>
 </dd>
 </dl>
@@ -785,6 +1025,8 @@ def variable(
 <ul class="">
 <li><code><a title="scx.optimize.Model.add_constraint" href="#scx.optimize.Model.add_constraint">add_constraint</a></code></li>
 <li><code><a title="scx.optimize.Model.add_objective" href="#scx.optimize.Model.add_objective">add_objective</a></code></li>
+<li><code><a title="scx.optimize.Model.get_duals" href="#scx.optimize.Model.get_duals">get_duals</a></code></li>
+<li><code><a title="scx.optimize.Model.get_slacks" href="#scx.optimize.Model.get_slacks">get_slacks</a></code></li>
 <li><code><a title="scx.optimize.Model.solve" href="#scx.optimize.Model.solve">solve</a></code></li>
 </ul>
 </li>

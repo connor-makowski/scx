@@ -59,7 +59,7 @@ class ModelUtils(Error):
 
 @type_enforced.Enforcer
 class Model(ModelUtils):
-    def __init__(self, name: str, type: str):
+    def __init__(self, name: str, sense: [str, type(None)]):
         """
         Initialize a new optimization model object.
 
@@ -68,10 +68,11 @@ class Model(ModelUtils):
         - `name`:
             - Type: str
             - What: The name of this optimization model
-        - `type`:
+        - `sense`:
             - Type: str
             - What: The type of optimization to perform
-            - Options: ['maximize','minimize']
+            - Options: ['maximize','minimize',None]
+            - Note: If None, no optimization is performed, but a feasible solution is searched for given the constraints
         """
         # Validation Attributes
         self.__solved__ = False
@@ -79,16 +80,20 @@ class Model(ModelUtils):
 
         # Standard attributes
         self.name = name
+        self.sense = sense
         self.outputs = {"status": "Not Solved"}
 
         # Create PuLP Model
-        if type.lower() == "maximize":
+        if sense == None:
+            self.model = pulp.LpProblem(name=self.name)
+            self.__objective_added__ = True
+        elif sense.lower() == "maximize":
             self.model = pulp.LpProblem(name=self.name, sense=pulp.LpMaximize)
-        elif type.lower() == "minimize":
+        elif sense.lower() == "minimize":
             self.model = pulp.LpProblem(name=self.name, sense=pulp.LpMinimize)
         else:
             self.exception(
-                "When creating a model, `type` must be specified as either `maximize` or `minimize`."
+                "When creating a model, `sense` must be specified as either `'maximize'`, `'minimize'` or `None`."
             )
 
     def add_objective(self, fn):
@@ -104,9 +109,14 @@ class Model(ModelUtils):
         """
         # Validity Checks
         if self.__objective_added__:
-            self.exception(
-                "An objective function has already been added to this model."
-            )
+            if self.sense == None:
+                self.exception(
+                    "Models with `sense=None` should not have an objective function."
+                )
+            else:
+                self.exception(
+                    "An objective function has already been added to this model."
+                )
 
         # Add the objective function to the model
         self.model += fn
@@ -150,7 +160,13 @@ class Model(ModelUtils):
         else:
             self.model += fn
 
-    def solve(self, pulp_log: bool = False, except_on_infeasible: bool = True):
+    def solve(
+        self,
+        pulp_log: bool = False,
+        except_on_infeasible: bool = True,
+        get_duals: bool = False,
+        get_slacks: bool = False,
+    ):
         """
         Solve the current model object.
 
@@ -164,6 +180,14 @@ class Model(ModelUtils):
             - Type: bool
             - What: A flag to indicate if the model should throw an exception if the optimization model is infeasible. If false, the model will automatically relax constraints to generate an infeasible solution.
             - Default: True
+        - `get_duals`:
+            - Type: bool
+            - What: A flag to indicate if the dual values for constraints should be added to the normal `outputs`.
+            - Default: False
+        - `get_slacks`:
+            - Type: bool
+            - What: A flag to indicate if the slack values for constraints should be added to the normal `outputs`.
+            - Default: False
         """
         if self.__solved__:
             self.exception(
@@ -184,6 +208,49 @@ class Model(ModelUtils):
         self.__solved__ = True
         self.outputs = {
             "status": f"{pulp.LpStatus[self.model.status]}",
-            "objective": self.model.objective.value(),
+            "objective": self.model.objective.value()
+            if self.sense != None
+            else None,
             "variables": {i.name: i.value() for i in self.model.variables()},
         }
+        if get_duals:
+            self.get_duals()
+        if get_slacks:
+            self.get_slacks()
+
+    def get_slacks(self):
+        """
+        Adds slack values to the model outputs dictionary as `slacks` and also returns those slack values as an dictonary.
+
+        Notes:
+
+            - The model must be solved before this method can be used
+            - Slack values might not be avaialable depending on the solver that is used
+        """
+        if not self.__solved__:
+            self.exception(
+                "The current model must be solved before getting slacks."
+            )
+        self.outputs["slacks"] = {
+            key: value.slack for key, value in self.model.constraints.items()
+        }
+        return self.outputs["slacks"]
+
+    def get_duals(self):
+        """
+        Adds dual values to the model outputs dictionary as `duals` and also returns those dual values as an dictonary.
+
+        Notes:
+
+            - The model must be solved before this method can be used
+            - Dual values will be 0 or None for non LP models (EG MILPs)
+            - Dual values might not be avaialable depending on the solver that is used
+        """
+        if not self.__solved__:
+            self.exception(
+                "The current model must be solved before getting duals."
+            )
+        self.outputs["duals"] = {
+            key: value.pi for key, value in self.model.constraints.items()
+        }
+        return self.outputs["duals"]

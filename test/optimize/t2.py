@@ -22,7 +22,7 @@ constraints = {
 }
 
 # Initialize the model
-model = Model(name="Crazy_Cereal", type='maximize')
+model = Model(name="Crazy_Cereal", sense='maximize')
 
 
 # Add the Objective Fn
@@ -38,7 +38,7 @@ for key, value in constraints.items():
     )
 
 # Solve the model
-model.solve()
+model.solve(get_duals=True, get_slacks=True)
 
 # Show the outputs
 print(model.outputs)

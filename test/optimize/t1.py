@@ -5,7 +5,7 @@ sugary_amt = Model.variable(name="sugary", lowBound=0)
 regular_amt = Model.variable(name="regular", lowBound=0)
 
 # Initialize the model
-model = Model(name="Crazy_Cereal", type='maximize')
+model = Model(name="Crazy_Cereal", sense='maximize')
 
 # Add the Objective Fn
 model.add_objective(
@@ -23,7 +23,7 @@ model.add_constraint(
 )
 
 # Solve the model
-model.solve()
+model.solve(get_duals=True, get_slacks=True)
 
 # Show the outputs
 print(model.outputs)
