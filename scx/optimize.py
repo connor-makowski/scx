@@ -189,10 +189,8 @@ class Model(ModelUtils):
             - What: A flag to indicate if the slack values for constraints should be added to the normal `outputs`.
             - Default: False
         """
-        if self.__solved__:
-            self.exception(
-                "This model has already been solved. You can not add any more constraints."
-            )
+        # Check the model validity
+        self.validity_checks()
         # Solve the model
         self.model.solve(pulp.PULP_CBC_CMD(msg=(3 if pulp_log else 0)))
 
@@ -254,3 +252,21 @@ class Model(ModelUtils):
             key: value.pi for key, value in self.model.constraints.items()
         }
         return self.outputs["duals"]
+
+    def validity_checks(self):
+        """
+        Runs validity checks on the model before solving it
+
+        - Checks to make sure the model has not already been solved
+        - Ensures that variables each have unique names
+        - Note: PuLP automatically verifies constraint name uniqueness
+        """
+        # Ensure model is not solved
+        if self.__solved__:
+            self.exception(
+                "This model has already been solved. You can not add any more constraints."
+            )
+        # Ensure Variable Names are Unique
+        variable_names = [i.name for i in self.model.variables()]
+        if len(set(variable_names)) < len(variable_names):
+            self.exception("Overlapping variable names exist in the model.")
