@@ -270,3 +270,11 @@ class Model(ModelUtils):
         variable_names = [i.name for i in self.model.variables()]
         if len(set(variable_names)) < len(variable_names):
             self.exception("Overlapping variable names exist in the model.")
+
+    def get_formulation(self):
+        """
+        Returns the current model formulation as a string in a human readable form.
+
+        Note: This aggregate variables where possible such that `variable_1*2 + variable_1*1` => `variable_1*3`
+        """
+        return str(self.model)
