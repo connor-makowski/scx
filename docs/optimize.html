@@ -160,7 +160,7 @@ class Model(ModelUtils):
 
         - `fn`:
             - Type: function
-            - What: The pythonic version of the objective function
+            - What: The pythonic version of a constraint function
             - Note: This function should have pythonic [comparison operators](https://docs.python.org/3/reference/expressions.html#comparison)
 
         Optional:
@@ -303,7 +303,9 @@ class Model(ModelUtils):
         &#34;&#34;&#34;
         Returns the current model formulation as a string in a human readable form.
 
-        Note: This aggregate variables where possible such that `variable_1*2 + variable_1*1` =&gt; `variable_1*3`
+        Note: This aggregates variables where possible such that
+
+        - `variable_1*2 + variable_1*1` =&gt; `variable_1*3`
         &#34;&#34;&#34;
         return str(self.model)</code></pre>
 </details>
@@ -417,7 +419,7 @@ class Model(ModelUtils):
 
         - `fn`:
             - Type: function
-            - What: The pythonic version of the objective function
+            - What: The pythonic version of a constraint function
             - Note: This function should have pythonic [comparison operators](https://docs.python.org/3/reference/expressions.html#comparison)
 
         Optional:
@@ -560,7 +562,9 @@ class Model(ModelUtils):
         &#34;&#34;&#34;
         Returns the current model formulation as a string in a human readable form.
 
-        Note: This aggregate variables where possible such that `variable_1*2 + variable_1*1` =&gt; `variable_1*3`
+        Note: This aggregates variables where possible such that
+
+        - `variable_1*2 + variable_1*1` =&gt; `variable_1*3`
         &#34;&#34;&#34;
         return str(self.model)</code></pre>
 </details>
@@ -580,7 +584,7 @@ class Model(ModelUtils):
 <ul>
 <li><code>fn</code>:<ul>
 <li>Type: function</li>
-<li>What: The pythonic version of the objective function</li>
+<li>What: The pythonic version of a constraint function</li>
 <li>Note: This function should have pythonic <a href="https://docs.python.org/3/reference/expressions.html#comparison">comparison operators</a></li>
 </ul>
 </li>
@@ -606,7 +610,7 @@ class Model(ModelUtils):
 
     - `fn`:
         - Type: function
-        - What: The pythonic version of the objective function
+        - What: The pythonic version of a constraint function
         - Note: This function should have pythonic [comparison operators](https://docs.python.org/3/reference/expressions.html#comparison)
 
     Optional:
@@ -722,7 +726,10 @@ class Model(ModelUtils):
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the current model formulation as a string in a human readable form.</p>
-<p>Note: This aggregate variables where possible such that <code>variable_1*2 + variable_1*1</code> =&gt; <code>variable_1*3</code></p></div>
+<p>Note: This aggregates variables where possible such that</p>
+<ul>
+<li><code>variable_1*2 + variable_1*1</code> =&gt; <code>variable_1*3</code></li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -731,7 +738,9 @@ class Model(ModelUtils):
     &#34;&#34;&#34;
     Returns the current model formulation as a string in a human readable form.
 
-    Note: This aggregate variables where possible such that `variable_1*2 + variable_1*1` =&gt; `variable_1*3`
+    Note: This aggregates variables where possible such that
+
+    - `variable_1*2 + variable_1*1` =&gt; `variable_1*3`
     &#34;&#34;&#34;
     return str(self.model)</code></pre>
 </details>

@@ -132,7 +132,7 @@ class Model(ModelUtils):
 
         - `fn`:
             - Type: function
-            - What: The pythonic version of the objective function
+            - What: The pythonic version of a constraint function
             - Note: This function should have pythonic [comparison operators](https://docs.python.org/3/reference/expressions.html#comparison)
 
         Optional:
@@ -275,6 +275,8 @@ class Model(ModelUtils):
         """
         Returns the current model formulation as a string in a human readable form.
 
-        Note: This aggregate variables where possible such that `variable_1*2 + variable_1*1` => `variable_1*3`
+        Note: This aggregates variables where possible such that
+
+        - `variable_1*2 + variable_1*1` => `variable_1*3`
         """
         return str(self.model)
