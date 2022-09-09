@@ -73,11 +73,17 @@ model.add_constraint(
 model.solve(get_duals=True, get_slacks=True)
 
 # Show the outputs
-print(model.outputs)
+# NOTE: outputs can be fetched directly as a dictionary with `model.get_outputs()`
+model.show_outputs()
 ```
 Outputs:
 ```py
-{'status': 'Optimal', 'objective': 80.0, 'variables': {'product_1': 60.0, 'product_2': 20.0}, 'duals': {'input_1_constraint': 0.4, 'input_2_constraint': 0.2}, 'slacks': {'input_1_constraint': -0.0, 'input_2_constraint': -0.0}}
+{'duals': {'input_1_constraint': 0.4, 'input_2_constraint': 0.2},
+ 'objective': 80.0,
+ 'slacks': {'input_1_constraint': -0.0, 'input_2_constraint': -0.0},
+ 'status': 'Optimal',
+ 'variables': {'product_1': 60.0, 'product_2': 20.0}}
+
 ```
 
 ### Array Based Optimization
@@ -133,9 +139,58 @@ for j in constraints:
 model.solve(get_duals=True, get_slacks=True)
 
 # Show the outputs
-print(model.outputs)
+# NOTE: outputs can be fetched directly as a dictionary with `model.get_outputs()`
+model.show_outputs()
 ```
 Outputs:
 ```py
-{'status': 'Optimal', 'objective': 80.0, 'variables': {'product_1': 60.0, 'product_2': 20.0}, 'duals': {'input_1_constraint': 0.4, 'input_2_constraint': 0.2}, 'slacks': {'input_1_constraint': -0.0, 'input_2_constraint': -0.0}}
+{'duals': {'input_1_constraint': 0.4, 'input_2_constraint': 0.2},
+ 'objective': 80.0,
+ 'slacks': {'input_1_constraint': -0.0, 'input_2_constraint': -0.0},
+ 'status': 'Optimal',
+ 'variables': {'product_1': 60.0, 'product_2': 20.0}}
+```
+
+### Show a model formulation
+```py
+from scx.optimize import Model
+
+# Create variables
+product_1_amt = Model.variable(name="product_1", lowBound=0)
+product_2_amt = Model.variable(name="product_2", lowBound=0)
+
+# Initialize the model
+model = Model(name="Generic_Problem", sense='maximize')
+
+# Add the Objective Fn
+model.add_objective(
+    fn = (product_1_amt*1)+(product_2_amt*1)
+)
+
+# Add Constraints
+model.add_constraint(
+    name = 'input_1_constraint',
+    fn = product_1_amt*1+product_2_amt*2 <= 100
+)
+model.add_constraint(
+    name = 'input_2_constraint',
+    fn = product_1_amt*3+product_2_amt*1 <= 200
+)
+
+# Show the model formulation
+model.show_formulation()
+```
+Outputs:
+```
+Generic_Problem:
+MAXIMIZE
+1*product_1 + 1*product_2 + 0
+SUBJECT TO
+input_1_constraint: product_1 + 2 product_2 <= 100
+
+input_2_constraint: 3 product_1 + product_2 <= 200
+
+VARIABLES
+product_1 Continuous
+product_2 Continuous
 ```

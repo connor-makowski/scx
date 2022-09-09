@@ -7,7 +7,7 @@ long_description = (this_directory / "README.md").read_text()
 setup(
   name = 'scx',
   packages = ['scx'],
-  version = '1.0.3',
+  version = '1.0.4',
   license='MIT',
   description = 'MIT Supply Chain Python Package',
   long_description=long_description,
@@ -15,9 +15,9 @@ setup(
   author = 'Connor Makowski',
   author_email = 'conmak@mit.edu',
   url = 'https://github.com/connor-makowski/scx',
-  download_url = 'https://github.com/connor-makowski/scx/dist/scx-1.0.3.tar.gz',
+  download_url = 'https://github.com/connor-makowski/scx/dist/scx-1.0.4.tar.gz',
   keywords = [],
-  install_requires=["PuLP==2.6.0", "type_enforced==0.0.5"],
+  install_requires=["PuLP==2.6.0", "type_enforced==0.0.7"],
   classifiers=[
     'Development Status :: 3 - Alpha',
     'Intended Audience :: Developers',

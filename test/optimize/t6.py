@@ -37,5 +37,9 @@ for key, value in constraints.items():
         fn=Model.sum([i['amt']*i[key] for i in data.values()]) <= value
     )
 
-# Show the created model
-print(model.get_formulation())
+try:
+    model.get_formulation()
+    model.solve()
+    print('Passed!')
+except:
+    print('Failed!')
