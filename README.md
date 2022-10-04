@@ -5,9 +5,22 @@ MIT's Supply Chain Micromaster (SCx) Python Package
 # Documentation
 [Technical documentation](https://connor-makowski.github.io/scx/index.html) can be found [here](https://connor-makowski.github.io/scx/index.html).
 
+# Setup
+
+## Cloud Setup (Google Colab)
+- You can access google colab [here](https://colab.research.google.com/)
+- Create a new notebook (or use this [example one](https://colab.research.google.com/github/connor-makowski/python_for_scx/blob/main/notebooks/optimization/Q1.ipynb))
+- Install the `scx` package by adding the following to a new cell at the top of your notebook and running it:
+  - `pip install scx`
+
+
 ## Local Setup
 Make sure you have Python 3.6.x (or higher) installed on your system. You can download it [here](https://www.python.org/downloads/).
-- Recommended (but Optional) - Setup and activate a virtual environment:  
+<details>
+<summary>
+Recommended (but Optional) -> Expand this section to setup and activate a virtual environment.
+</summary>
+
   - Install (or upgrade) virtualenv:
   ```
   python3 -m pip install --upgrade virtualenv
@@ -25,14 +38,11 @@ Make sure you have Python 3.6.x (or higher) installed on your system. You can do
     ```
     venv\scripts\activate
     ```
-- Then in your terminal:
-  - `pip install scx`
+</details>
 
-## Cloud Setup
-Create a google account and access google colab [here](https://colab.research.google.com/).
-- Create a new notebook
-- Install the `scx` package by adding the following to a new cell and running it:
-  - `pip install scx`
+```
+pip install scx
+```
 
 # Getting Started
 
