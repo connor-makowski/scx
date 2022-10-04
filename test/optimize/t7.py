@@ -167,6 +167,5 @@ try:
     my_model.solve()
     my_model.get_formulation()
     my_model.get_outputs()
-    print('Passed!')
 except:
-    print('Failed!')
+    print ("optimize/t7.py failed")

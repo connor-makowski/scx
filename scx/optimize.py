@@ -10,7 +10,7 @@ class ModelUtils(Error):
         name: str,
         lowBound: [float, int, None] = None,
         upBound: [float, int, None] = None,
-        cat: str = "Continuous",
+        cat: [str, None] = "Continuous",
     ):
         """
         Creates a variable object to be used in an optimize.Model object
