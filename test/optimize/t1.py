@@ -25,5 +25,5 @@ model.add_constraint(
 # Solve the model
 model.solve(get_duals=True, get_slacks=True)
 
-# Show the outputs
-print(model.outputs)
+if round(model.outputs.get('objective'),2) != 5117.33:
+    print ("optimize/t1.py failed")

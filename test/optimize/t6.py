@@ -40,6 +40,5 @@ for key, value in constraints.items():
 try:
     model.get_formulation()
     model.solve()
-    print('Passed!')
 except:
-    print('Failed!')
+    print ("optimize/t6.py failed")

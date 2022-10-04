@@ -4,7 +4,7 @@ from scx.optimize import Model
 # Generic Problem
 # Create variables
 product_1_amt = Model.variable(name="product_1", lowBound=0)
-product_2_amt = Model.variable(name="product_1", lowBound=0)
+product_2_amt = Model.variable(name="product_2", lowBound=0)
 
 # Initialize the model
 model = Model(name="Generic_Problem", sense='maximize')
@@ -24,9 +24,8 @@ model.add_constraint(
     fn = product_1_amt*3+product_2_amt*1 <= 200
 )
 
-# Two variables are the same name this should fail in order to pass.
-try:
-    model.solve()
-    print ("optimize/t5.py failed")
-except:
-    pass
+# Solve the model
+model.solve(get_duals=True, get_slacks=True)
+
+if round(model.outputs.get('objective'),2) != 80.00:
+    print ("optimize/t4a.py failed")
