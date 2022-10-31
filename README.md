@@ -62,29 +62,29 @@ product_1_amt = Model.variable(name="product_1", lowBound=0)
 product_2_amt = Model.variable(name="product_2", lowBound=0)
 
 # Initialize the model
-model = Model(name="Generic_Problem", sense='maximize')
+my_model = Model(name="Generic_Problem", sense='maximize')
 
 # Add the Objective Fn
-model.add_objective(
+my_model.add_objective(
     fn = (product_1_amt*1)+(product_2_amt*1)
 )
 
 # Add Constraints
-model.add_constraint(
+my_model.add_constraint(
     name = 'input_1_constraint',
     fn = product_1_amt*1+product_2_amt*2 <= 100
 )
-model.add_constraint(
+my_model.add_constraint(
     name = 'input_2_constraint',
     fn = product_1_amt*3+product_2_amt*1 <= 200
 )
 
 # Solve the model
-model.solve(get_duals=True, get_slacks=True)
+my_model.solve(get_duals=True, get_slacks=True)
 
 # Show the outputs
-# NOTE: outputs can be fetched directly as a dictionary with `model.get_outputs()`
-model.show_outputs()
+# NOTE: outputs can be fetched directly as a dictionary with `my_model.get_outputs()`
+my_model.show_outputs()
 ```
 Outputs:
 ```py
@@ -130,27 +130,27 @@ constraints = [
 ]
 
 # Initialize the model
-model = Model(name="Array_Problem", sense='maximize')
+my_model = Model(name="Array_Problem", sense='maximize')
 
 
 # Add the Objective Fn
-model.add_objective(
+my_model.add_objective(
     fn=Model.sum([i['amt']*i['profit'] for i in data])
 )
 
 # Add Constraints
 for j in constraints:
-    model.add_constraint(
+    my_model.add_constraint(
         name=f'{j["name"]}_constraint',
         fn=Model.sum([i['amt']*i[j['name']] for i in data]) <= j['max_amt']
     )
 
 # Solve the model
-model.solve(get_duals=True, get_slacks=True)
+my_model.solve(get_duals=True, get_slacks=True)
 
 # Show the outputs
 # NOTE: outputs can be fetched directly as a dictionary with `model.get_outputs()`
-model.show_outputs()
+my_model.show_outputs()
 ```
 Outputs:
 ```py
@@ -170,25 +170,25 @@ product_1_amt = Model.variable(name="product_1", lowBound=0)
 product_2_amt = Model.variable(name="product_2", lowBound=0)
 
 # Initialize the model
-model = Model(name="Generic_Problem", sense='maximize')
+my_model = Model(name="Generic_Problem", sense='maximize')
 
 # Add the Objective Fn
-model.add_objective(
+my_model.add_objective(
     fn = (product_1_amt*1)+(product_2_amt*1)
 )
 
 # Add Constraints
-model.add_constraint(
+my_model.add_constraint(
     name = 'input_1_constraint',
     fn = product_1_amt*1+product_2_amt*2 <= 100
 )
-model.add_constraint(
+my_model.add_constraint(
     name = 'input_2_constraint',
     fn = product_1_amt*3+product_2_amt*1 <= 200
 )
 
 # Show the model formulation
-model.show_formulation()
+my_model.show_formulation()
 ```
 Outputs:
 ```
