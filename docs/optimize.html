@@ -357,10 +357,25 @@ class Model(ModelUtils):
 <dl>
 <dt id="scx.optimize.Model"><code class="flex name class">
 <span>class <span class="ident">Model</span></span>
-<span>(</span><span>**kwargs)</span>
+<span>(</span><span>name: str, sense: [<class 'str'>, None])</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This method is used to validate the passed inputs and return the output of the wrapped function or method.</p></div>
+<div class="desc"><p>Initialize a new optimization model object.</p>
+<p>Requires:</p>
+<ul>
+<li><code>name</code>:<ul>
+<li>Type: str</li>
+<li>What: The name of this optimization model</li>
+</ul>
+</li>
+<li><code>sense</code>:<ul>
+<li>Type: str</li>
+<li>What: The type of optimization to perform</li>
+<li>Options: ['maximize','minimize',None]</li>
+<li>Note: If None, no optimization is performed, but a feasible solution is searched for given the constraints</li>
+</ul>
+</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -629,109 +644,72 @@ class Model(ModelUtils):
 <li><a title="scx.optimize.ModelUtils" href="#scx.optimize.ModelUtils">ModelUtils</a></li>
 <li><a title="scx.utils.Error" href="utils.html#scx.utils.Error">Error</a></li>
 </ul>
-<h3>Static methods</h3>
-<dl>
-<dt id="scx.optimize.Model.add_constraint"><code class="name flex">
-<span>def <span class="ident">add_constraint</span></span>(<span>*args, **kwargs)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>This method is used to validate the passed inputs and return the output of the wrapped function or method.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def __call__(self, *args, **kwargs):
-    &#34;&#34;&#34;
-    This method is used to validate the passed inputs and return the output of the wrapped function or method.
-    &#34;&#34;&#34;
-    # Special code to pass self as an initial argument
-    # for validation purposes in methods
-    # See: self.__get__
-    if self.__outer_self__ is not None:
-        args = (self.__outer_self__,) + args
-    # Determine assigned variables as they were passed in
-    # See https://stackoverflow.com/a/71884467/12014156
-    if self.__fn__.__defaults__ is not None:
-        kwarg_defaults = dict(
-            zip(
-                self.__fn__.__code__.co_varnames[-len(self.__fn__.__defaults__) :],
-                self.__fn__.__defaults__,
-            )
-        )
-    else:
-        kwarg_defaults = {}
-    # Create a compreshensive dictionary of assigned variables
-    assigned_vars = {
-        **dict(zip(self.__fn__.__code__.co_varnames[: len(args)], args)),
-        **kwarg_defaults,
-        **kwargs,
-    }
-    # Create a shallow copy dictionary to preserve annotations at object root
-    annotations = dict(self.__annotations__)
-    # Validate all listed annotations vs the assigned_vars dictionary
-    for key, value in annotations.items():
-        if key in assigned_vars:
-            self.__check_type__(assigned_vars.get(key), value, key)
-    # Execute the function callable
-    return_value = self.__fn__(*args, **kwargs)
-    # If a return type was passed, validate the returned object
-    if &#34;return&#34; in annotations:
-        self.__check_type__(return_value, annotations[&#34;return&#34;], &#34;return&#34;)
-    return return_value</code></pre>
-</details>
-</dd>
-<dt id="scx.optimize.Model.solve"><code class="name flex">
-<span>def <span class="ident">solve</span></span>(<span>*args, **kwargs)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>This method is used to validate the passed inputs and return the output of the wrapped function or method.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def __call__(self, *args, **kwargs):
-    &#34;&#34;&#34;
-    This method is used to validate the passed inputs and return the output of the wrapped function or method.
-    &#34;&#34;&#34;
-    # Special code to pass self as an initial argument
-    # for validation purposes in methods
-    # See: self.__get__
-    if self.__outer_self__ is not None:
-        args = (self.__outer_self__,) + args
-    # Determine assigned variables as they were passed in
-    # See https://stackoverflow.com/a/71884467/12014156
-    if self.__fn__.__defaults__ is not None:
-        kwarg_defaults = dict(
-            zip(
-                self.__fn__.__code__.co_varnames[-len(self.__fn__.__defaults__) :],
-                self.__fn__.__defaults__,
-            )
-        )
-    else:
-        kwarg_defaults = {}
-    # Create a compreshensive dictionary of assigned variables
-    assigned_vars = {
-        **dict(zip(self.__fn__.__code__.co_varnames[: len(args)], args)),
-        **kwarg_defaults,
-        **kwargs,
-    }
-    # Create a shallow copy dictionary to preserve annotations at object root
-    annotations = dict(self.__annotations__)
-    # Validate all listed annotations vs the assigned_vars dictionary
-    for key, value in annotations.items():
-        if key in assigned_vars:
-            self.__check_type__(assigned_vars.get(key), value, key)
-    # Execute the function callable
-    return_value = self.__fn__(*args, **kwargs)
-    # If a return type was passed, validate the returned object
-    if &#34;return&#34; in annotations:
-        self.__check_type__(return_value, annotations[&#34;return&#34;], &#34;return&#34;)
-    return return_value</code></pre>
-</details>
-</dd>
-</dl>
 <h3>Methods</h3>
 <dl>
+<dt id="scx.optimize.Model.add_constraint"><code class="name flex">
+<span>def <span class="ident">add_constraint</span></span>(<span>self, fn, name: [<class 'str'>, None] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add a constraint function to the current model object. Each model can have unlimited constraints.</p>
+<p>Requires:</p>
+<ul>
+<li><code>fn</code>:<ul>
+<li>Type: function</li>
+<li>What: The pythonic version of a constraint function</li>
+<li>Note: This function should have pythonic <a href="https://docs.python.org/3/reference/expressions.html#comparison">comparison operators</a></li>
+</ul>
+</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>name</code>:<ul>
+<li>Type: str</li>
+<li>What: The name of this constraint</li>
+<li>Default: None</li>
+</ul>
+</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_constraint(self, fn, name: [str, None] = None):
+    &#34;&#34;&#34;
+    Add a constraint function to the current model object. Each model can have unlimited constraints.
+
+    Requires:
+
+    - `fn`:
+        - Type: function
+        - What: The pythonic version of a constraint function
+        - Note: This function should have pythonic [comparison operators](https://docs.python.org/3/reference/expressions.html#comparison)
+
+    Optional:
+
+    - `name`:
+        - Type: str
+        - What: The name of this constraint
+        - Default: None
+
+
+    &#34;&#34;&#34;
+    # Validity Checks
+    if not self.__objective_added__:
+        self.exception(
+            &#34;An objective function should be added to this model before adding constraints.&#34;
+        )
+    if self.__solved__:
+        self.exception(
+            &#34;This model has already been solved. You can not add any more constraints.&#34;
+        )
+
+    # Add the constraint to the model
+    if name != None:
+        self.model += (fn, name)
+    else:
+        self.model += fn</code></pre>
+</details>
+</dd>
 <dt id="scx.optimize.Model.add_objective"><code class="name flex">
 <span>def <span class="ident">add_objective</span></span>(<span>self, fn)</span>
 </code></dt>
@@ -944,6 +922,99 @@ class Model(ModelUtils):
         pprint(outputs)
     else:
         print(output)</code></pre>
+</details>
+</dd>
+<dt id="scx.optimize.Model.solve"><code class="name flex">
+<span>def <span class="ident">solve</span></span>(<span>self, pulp_log: bool = False, except_on_infeasible: bool = True, get_duals: bool = False, get_slacks: bool = False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Solve the current model object.</p>
+<p>Optional:</p>
+<ul>
+<li><code>pulp_log</code>:<ul>
+<li>Type: bool</li>
+<li>What: A flag to indicate if the relevant pulp / coinOr solver log should be logged in the console. This can be helpful for debugging.</li>
+<li>Default: False</li>
+</ul>
+</li>
+<li><code>except_on_infeasible</code>:<ul>
+<li>Type: bool</li>
+<li>What: A flag to indicate if the model should throw an exception if the optimization model is infeasible. If false, the model will automatically relax constraints to generate an infeasible solution.</li>
+<li>Default: True</li>
+</ul>
+</li>
+<li><code>get_duals</code>:<ul>
+<li>Type: bool</li>
+<li>What: A flag to indicate if the dual values for constraints should be added to the normal <code>outputs</code>.</li>
+<li>Default: False</li>
+</ul>
+</li>
+<li><code>get_slacks</code>:<ul>
+<li>Type: bool</li>
+<li>What: A flag to indicate if the slack values for constraints should be added to the normal <code>outputs</code>.</li>
+<li>Default: False</li>
+</ul>
+</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def solve(
+    self,
+    pulp_log: bool = False,
+    except_on_infeasible: bool = True,
+    get_duals: bool = False,
+    get_slacks: bool = False,
+):
+    &#34;&#34;&#34;
+    Solve the current model object.
+
+    Optional:
+
+    - `pulp_log`:
+        - Type: bool
+        - What: A flag to indicate if the relevant pulp / coinOr solver log should be logged in the console. This can be helpful for debugging.
+        - Default: False
+    - `except_on_infeasible`:
+        - Type: bool
+        - What: A flag to indicate if the model should throw an exception if the optimization model is infeasible. If false, the model will automatically relax constraints to generate an infeasible solution.
+        - Default: True
+    - `get_duals`:
+        - Type: bool
+        - What: A flag to indicate if the dual values for constraints should be added to the normal `outputs`.
+        - Default: False
+    - `get_slacks`:
+        - Type: bool
+        - What: A flag to indicate if the slack values for constraints should be added to the normal `outputs`.
+        - Default: False
+    &#34;&#34;&#34;
+    # Check the model validity
+    self.validity_checks()
+    # Solve the model
+    self.model.solve(pulp.PULP_CBC_CMD(msg=(3 if pulp_log else 0)))
+
+    if self.model.status == -1:
+        if except_on_infeasible:
+            self.exception(
+                &#34;The current model is infeasible and can not be solved.&#34;
+            )
+        else:
+            self.warn(
+                &#34;The current model is infeasible and can not be solved. Constraints have been relaxed to provide a solution anyway.&#34;
+            )
+    self.__solved__ = True
+    self.outputs = {
+        &#34;status&#34;: f&#34;{pulp.LpStatus[self.model.status]}&#34;,
+        &#34;objective&#34;: self.model.objective.value()
+        if self.sense != None
+        else None,
+        &#34;variables&#34;: {i.name: i.value() for i in self.model.variables()},
+    }
+    if get_duals:
+        self.get_duals()
+    if get_slacks:
+        self.get_slacks()</code></pre>
 </details>
 </dd>
 <dt id="scx.optimize.Model.validity_checks"><code class="name flex">
