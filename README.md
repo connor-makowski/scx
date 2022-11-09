@@ -9,7 +9,7 @@ MIT's Supply Chain Micromaster (SCx) Python Package
 
 ## Cloud Setup (Google Colab)
 - You can access google colab [here](https://colab.research.google.com/)
-- Create a new notebook (or use this [example one](https://colab.research.google.com/github/connor-makowski/python_for_scx/blob/main/notebooks/optimization/Q1.ipynb))
+- Create a new notebook (or use this [example one](https://colab.research.google.com/github/connor-makowski/python_for_scx/blob/main/notebooks/optimization/P1.ipynb))
 - Install the `scx` package by adding the following to a new cell at the top of your notebook and running it:
   - `pip install scx`
 
