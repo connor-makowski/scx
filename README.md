@@ -47,7 +47,7 @@ pip install scx
 ```
 
 ## Optimization Getting Started
-See all of the optimization examples [here](https://colab.research.google.com/github/connor-makowski/scx/tree/main/notebooks/optimization/).
+See all of the optimization examples [here](https://github.com/connor-makowski/scx/tree/main/notebooks/optimization/).
 
 ### Basic Usage
 ```py
