@@ -1,3 +1,4 @@
+jupyter==1.0.0
 Mako==1.1.4
 Markdown==3.3.4
 MarkupSafe==1.1.1
