@@ -4,15 +4,18 @@ MIT's Supply Chain Micromaster (SCx) Python Package
 ## Documentation
 [Technical documentation](https://connor-makowski.github.io/scx/index.html) can be found [here](https://connor-makowski.github.io/scx/index.html).
 
-## Setup
+## Examples
+- [All Optimization Examples](https://github.com/connor-makowski/scx/tree/main/notebooks/optimization/)
+  - [Basic Examples](https://github.com/connor-makowski/scx/tree/main/notebooks/optimization/basic_examples)
+  - [Blinky Examples (with video walkthroughs)](https://github.com/connor-makowski/scx/tree/main/notebooks/optimization/blinky_examples)
+  - [Miscellaneous Examples](https://github.com/connor-makowski/scx/tree/main/notebooks/optimization/misc_examples)
 
-### Quick Reference Example Notebook (Google Colab)
-- [Example Notebook Here](https://colab.research.google.com/github/connor-makowski/scx/blob/main/notebooks/optimization/P1.ipynb)
+## Setup
 
 ### Cloud Setup (Google Colab)
 - You can access google colab [here](https://colab.research.google.com/)
 - Create a new notebook
-- Install the `scx` package by adding the following to a new cell at the top of your notebook and running it:
+- Install the `scx` package by adding the following to a new code cell at the **top** of your notebook and running it:
   - `pip install scx`
 
 
