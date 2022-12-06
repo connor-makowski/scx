@@ -1,5 +1,5 @@
 # SCx
-MIT's Supply Chain Micromaster (SCx) Python Package
+MIT's [Supply Chain Micromaster](https://micromasters.mit.edu/scm/) (SCx) Python Package
 
 ## Documentation
 [Technical documentation](https://connor-makowski.github.io/scx/index.html) can be found [here](https://connor-makowski.github.io/scx/index.html).

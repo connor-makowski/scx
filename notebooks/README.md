@@ -1,6 +1,6 @@
 # Python Intro
 
-This repository houses some introductory python notebooks to get people started learning python.
+This folder houses some introductory python notebooks to get people started learning python.
 
 ## Reference Use
 
