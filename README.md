@@ -5,7 +5,10 @@ MIT's Supply Chain Micromaster (SCx) Python Package
 [Technical documentation](https://connor-makowski.github.io/scx/index.html) can be found [here](https://connor-makowski.github.io/scx/index.html).
 
 ## Examples
-- [Optimization Examples](https://github.com/connor-makowski/scx/tree/main/notebooks/optimization/)
+- [All Optimization Examples](https://github.com/connor-makowski/scx/tree/main/notebooks/optimization/)
+  - [Basic Examples](https://github.com/connor-makowski/scx/tree/main/notebooks/optimization/basic_examples)
+  - [Blinky Examples (with video walkthroughs)](https://github.com/connor-makowski/scx/tree/main/notebooks/optimization/blinky_examples)
+  - [Miscellaneous Examples](https://github.com/connor-makowski/scx/tree/main/notebooks/optimization/misc_examples)
 
 ## Setup
 
