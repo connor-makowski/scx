@@ -1,4 +1,7 @@
 # SCx
+[![PyPI version](https://badge.fury.io/py/scx.svg)](https://badge.fury.io/py/scx)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 MIT's [Supply Chain Micromaster](https://micromasters.mit.edu/scm/) (SCx) Python Package
 
 ## Documentation
