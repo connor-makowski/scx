@@ -29,4 +29,4 @@ dependencies = ["type_enforced>=1.2.0","PuLP==2.7.0"]
 [project.urls]
 "Homepage" = "https://github.com/connor-makowski/scx"
 "Bug Tracker" = "https://github.com/connor-makowski/scx/issues"
-"Documentation" = "https://connor-makowski.github.io/scx/scx/index.html"
+"Documentation" = "https://connor-makowski.github.io/scx/scx.html"
