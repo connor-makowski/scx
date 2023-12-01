@@ -1,4 +1,32 @@
 [tool.black]
 line-length = 80
 target-version = ['py39']
-exclude = '/.*(migrations|__pycache__).*/'
+exclude = '/.*(__pycache__).*/'
+
+[tool.setuptools]
+py-modules = ["scx"]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scx"
+version = "1.1.0"
+description = "MIT Supply Chain Python Package"
+authors = [
+    {name="Connor Makowski", email="conmak@mit.edu"}
+]
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    'License :: OSI Approved :: MIT License',
+    "Operating System :: OS Independent",
+]
+dependencies = ["type_enforced>=1.2.0","PuLP==2.7.0"]
+
+[project.urls]
+"Homepage" = "https://github.com/connor-makowski/scx"
+"Bug Tracker" = "https://github.com/connor-makowski/scx/issues"
+"Documentation" = "https://connor-makowski.github.io/scx/scx/index.html"
