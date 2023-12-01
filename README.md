@@ -5,12 +5,14 @@
 MIT's [Supply Chain Micromaster](https://micromasters.mit.edu/scm/) (SCx) Python Package
 
 ## Documentation
-[Technical documentation](https://connor-makowski.github.io/scx/index.html) can be found [here](https://connor-makowski.github.io/scx/index.html).
+[Technical documentation](https://connor-makowski.github.io/scx/scx/index.html) can be found [here](https://connor-makowski.github.io/scx/index.html).
 
 ## Examples
 - [All Optimization Examples](https://github.com/connor-makowski/scx/tree/main/notebooks/optimization/)
   - [Basic Examples](https://github.com/connor-makowski/scx/tree/main/notebooks/optimization/basic_examples)
   - [Blinky Examples (with video walkthroughs)](https://github.com/connor-makowski/scx/tree/main/notebooks/optimization/blinky_examples)
+  - [Food On Wheels Examples (with video walkthroughs)](https://github.com/connor-makowski/scx/tree/main/notebooks/optimization/fow_examples)
+  - [Eco Pants Examples (with video walkthroughs)](https://github.com/connor-makowski/scx/tree/main/notebooks/optimization/eco_pants_examples)
   - [Miscellaneous Examples](https://github.com/connor-makowski/scx/tree/main/notebooks/optimization/misc_examples)
 
 ## Setup
@@ -23,7 +25,7 @@ MIT's [Supply Chain Micromaster](https://micromasters.mit.edu/scm/) (SCx) Python
 
 
 ### Local Setup
-Make sure you have Python 3.6.x (or higher) installed on your system. You can download it [here](https://www.python.org/downloads/).
+Make sure you have Python 3.7.x (or higher) installed on your system. You can download it [here](https://www.python.org/downloads/).
 <details>
 <summary>
 Recommended (but Optional) -> Expand this section to setup and activate a virtual environment.
