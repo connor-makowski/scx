@@ -14,6 +14,8 @@ MIT's [Supply Chain Micromaster](https://micromasters.mit.edu/scm/) (SCx) Python
   - [Food On Wheels Examples (with video walkthroughs)](https://github.com/connor-makowski/scx/tree/main/notebooks/optimization/fow_examples)
   - [Eco Pants Examples (with video walkthroughs)](https://github.com/connor-makowski/scx/tree/main/notebooks/optimization/eco_pants_examples)
   - [Miscellaneous Examples](https://github.com/connor-makowski/scx/tree/main/notebooks/optimization/misc_examples)
+- [All Database Examples](https://github.com/connor-makowski/scx/tree/main/notebooks/database/)
+  - [Transaction Database Example](https://github.com/connor-makowski/scx/tree/main/notebooks/database/Transaction.ipynb)
 
 ## Setup
 
@@ -103,4 +105,23 @@ Outputs:
  'status': 'Optimal',
  'variables': {'product_1': 60.0, 'product_2': 20.0}}
 
+```
+
+## Database Getting Started
+See all of the database examples [here](https://github.com/connor-makowski/scx/tree/main/notebooks/database/)
+
+### Basic Usage
+```py
+from scx.database import Database
+# Specify the S3 path to the data
+data_folder = 's3://scx-dev/databases/supermarket/'
+# Create the database
+db = Database(f"""
+    CREATE TABLE Customers AS SELECT * FROM read_parquet('{data_folder}customers.parquet');
+""")
+# Show the database Schema
+db.show_info()
+
+# Query the database
+db.query("SELECT * FROM Customers LIMIT 5")
 ```
