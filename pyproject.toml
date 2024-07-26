@@ -12,7 +12,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "scx"
-version = "1.1.0"
+version = "1.2.0"
 description = "MIT Supply Chain Python Package"
 authors = [
     {name="Connor Makowski", email="conmak@mit.edu"}
@@ -24,7 +24,7 @@ classifiers = [
     'License :: OSI Approved :: MIT License',
     "Operating System :: OS Independent",
 ]
-dependencies = ["type_enforced>=1.2.0","PuLP==2.7.0"]
+dependencies = ["type_enforced>=1.2.0","PuLP==2.7.0", "duckdb==1.0.0"]
 
 [project.urls]
 "Homepage" = "https://github.com/connor-makowski/scx"
