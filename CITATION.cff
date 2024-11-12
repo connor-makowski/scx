@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+title: >-
+  SCX
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Connor
+    family-names: Makowski
+    email: conmak@mit.edu
+    affiliation: MIT
+    orcid: 'https://orcid.org/0009-0005-1522-022X'
+repository-code: 'https://github.com/connor-makowski/scx'
+url: >-
+  https://connor-makowski.github.io/scx/scx.html
+abstract: >-
+  MIT's Supply Chain Micromaster (SCx) Python Package
+license: MIT
