@@ -315,4 +315,4 @@ class Model(ModelUtils):
         if pretty:
             pprint(outputs)
         else:
-            print(output)
+            print(outputs)

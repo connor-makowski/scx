@@ -18,26 +18,32 @@ class Database(Error):
         self.con = duckdb.connect(database=':memory:', read_only=False)
         self.con.execute(setup_code)
 
-    def get_info(self) -> dict[dict[str]]:
+    def get_info(self) -> dict[dict[str,dict[str]]]:
         """
         Return a dictionary of the database schema
 
         Returns a dictionary of the database schema in the following format:
         {
             'Table1': {
-                'column1': 'type',
-                'column2': 'type',
-                ...
+                'type': 'table',
+                'columns': {
+                    'column1': 'type1',
+                    'column2': 'type2',
+                    ...
+                }
             },
             ...
         }
         """
         return {
             table.get('name'): {
-                desc[0]: desc[1]
-                for desc in self.con.execute(f"SELECT * FROM {table.get('name')} LIMIT 1").description
+                'type': table.get('type'),
+                'columns': {
+                    desc[0]: desc[1]
+                    for desc in self.con.execute(f"SELECT * FROM {table.get('name')} LIMIT 1").description
+                }
             }
-            for table in self.query("SELECT name FROM sqlite_master WHERE type='table';")
+            for table in self.query("SELECT name, type FROM sqlite_master WHERE type='table' OR type='view' ORDER BY name;")
         }
 
     def show_info(self, pretty:bool = True) -> None:
@@ -56,10 +62,10 @@ class Database(Error):
         Returns None
         """
         if pretty:
-            for table, columns in self.get_info().items():
+            for item, item_data in self.get_info().items():
                 print ('='*25)
-                print(f"Table: {table}")
-                for column, dtype in columns.items():
+                print(f"{item_data.get('type').title()}: {item}")
+                for column, dtype in item_data.get('columns').items():
                     print(f"  {column}: {dtype}")
                 print()
         else:
