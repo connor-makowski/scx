@@ -1,20 +1,24 @@
 from scx.database import Database
-from pprint import pprint
 
 # Tables
 # - customers.parquet
 
-data_folder = 's3://scx-dev/databases/supermarket/'
+data_folder = "s3://scx-dev/databases/supermarket/"
 db_fail = False
 
 try:
     # Create a database
-    db = Database(f"""
+    db = Database(
+        f"""
         CREATE TABLE Customers AS SELECT * FROM read_parquet('{data_folder}customers.parquet');
-    """)
+    """
+    )
     # Validate the info
     info = db.get_info()
-    if info.get('Customers',{}).get('Customer_ID') != 'NUMBER':
+    if (
+        info.get("Customers", {}).get("columns", {}).get("Customer_ID")
+        != "NUMBER"
+    ):
         db_fail = True
 
     # Query the database
@@ -26,9 +30,3 @@ except:
 
 if db_fail:
     print("database/t1.py failed")
-
-
-
-
-
-

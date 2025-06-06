@@ -207,9 +207,9 @@ class Model(ModelUtils):
         self.__solved__ = True
         self.outputs = {
             "status": f"{pulp.LpStatus[self.model.status]}",
-            "objective": self.model.objective.value()
-            if self.sense != None
-            else None,
+            "objective": (
+                self.model.objective.value() if self.sense != None else None
+            ),
             "variables": {i.name: i.value() for i in self.model.variables()},
         }
         if get_duals:
