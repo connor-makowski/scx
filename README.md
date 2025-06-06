@@ -27,7 +27,7 @@ MIT's [Supply Chain Micromaster](https://micromasters.mit.edu/scm/) (SCx) Python
 
 
 ### Local Setup
-Make sure you have Python 3.7.x (or higher) installed on your system. You can download it [here](https://www.python.org/downloads/).
+Make sure you have Python 3.11.x (or higher) installed on your system. You can download it [here](https://www.python.org/downloads/).
 <details>
 <summary>
 Recommended (but Optional) -> Expand this section to setup and activate a virtual environment.
@@ -116,9 +116,9 @@ from scx.database import Database
 # Specify the S3 path to the data
 data_folder = 's3://scx-dev/databases/supermarket/'
 # Create the database
-db = Database(f"""
+db = Database(f'''
     CREATE TABLE Customers AS SELECT * FROM read_parquet('{data_folder}customers.parquet');
-""")
+''')
 # Show the database Schema
 db.show_info()
 

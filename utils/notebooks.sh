@@ -1,5 +1,4 @@
-
-
+#!/bin/bash
 for file in $(find ./notebooks -type f -name '*.ipynb')
 do
   echo $file

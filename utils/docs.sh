@@ -21,7 +21,7 @@ function generate_docs() {
             pip install "./dist/scx-$INPUT_VERSION.tar.gz"
         fi
     fi
-    pdoc -o ./docs/$INPUT_VERSION -t ./doc_template scx
+    pdoc --logo https://raw.githubusercontent.com/connor-makowski/scx/refs/heads/main/doc_template/logo.jpg --logo-link https://micromasters.mit.edu/scm/ -o ./docs/$INPUT_VERSION -t ./doc_template scx
 }
 
 # Generate the docs for the current version
