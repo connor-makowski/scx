@@ -10,14 +10,14 @@ from .utils import Error
 class Summary(Error):
     @staticmethod
     def __get_vector__(
-        vector: [tuple[int, float], list[int, float]],
-    ) -> tuple[int, float]:
+        vector: tuple[int|float, ...] | list[int|float],
+    ) -> tuple[int|float, ...]:
         if len(vector) == 0:
             self.exception("The provided vector is empty")
         return tuple(sorted(vector))
 
     @staticmethod
-    def get_all_summary_stats(vector: [list, tuple]) -> dict[float]:
+    def get_all_summary_stats(vector: list | tuple) -> dict[str, float]:
         vector = Summary.__get_vector__(vector)
         return {
             "mean": Summary.get_mean(vector),
@@ -37,8 +37,8 @@ class Summary(Error):
 
     @staticmethod
     def get_percentile(
-        percentile: [float, int],
-        vector: [list, tuple],
+        percentile: float | int,
+        vector: list | tuple,
         vector_is_checked: bool = False,
     ) -> float:
         if not vector_is_checked:
@@ -53,7 +53,7 @@ class Summary(Error):
 
     @staticmethod
     def get_mode(
-        vector: [list, tuple], vector_is_checked: bool = False
+        vector: list | tuple, vector_is_checked: bool = False
     ) -> float:
         if not vector_is_checked:
             vector = Summary.__get_vector__(vector)
@@ -61,7 +61,7 @@ class Summary(Error):
 
     @staticmethod
     def get_mean(
-        vector: [list, tuple], vector_is_checked: bool = False
+        vector: list | tuple, vector_is_checked: bool = False
     ) -> float:
         if not vector_is_checked:
             vector = Summary.__get_vector__(vector)

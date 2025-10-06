@@ -19,7 +19,7 @@ class Database(Error):
         self.con = duckdb.connect(database=":memory:", read_only=False)
         self.con.execute(setup_code)
 
-    def get_info(self) -> dict[dict[str, dict[str]]]:
+    def get_info(self) -> dict:
         """
         Return a dictionary of the database schema
 
@@ -78,7 +78,7 @@ class Database(Error):
 
     def query(
         self, query: str, return_type: str = "list_of_dicts"
-    ) -> [list[dict], dict[list]]:
+    ) -> list[dict] | dict[str, list]:
         """
         Execute a query on the database
 

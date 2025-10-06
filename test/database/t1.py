@@ -16,8 +16,7 @@ try:
     # Validate the info
     info = db.get_info()
     if (
-        info.get("Customers", {}).get("columns", {}).get("Customer_ID")
-        != "NUMBER"
+        info.get("Customers", {}).get("columns", {}).get("Customer_ID") not in ["INTEGER", "BIGINT", "NUMBER"]
     ):
         db_fail = True
 

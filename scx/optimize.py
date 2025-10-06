@@ -1,6 +1,7 @@
 import pulp, type_enforced
 from pprint import pprint
 from .utils import Error
+import typing
 
 
 @type_enforced.Enforcer
@@ -8,9 +9,9 @@ class ModelUtils(Error):
     @staticmethod
     def variable(
         name: str,
-        lowBound: [float, int, None] = None,
-        upBound: [float, int, None] = None,
-        cat: [str, None] = "Continuous",
+        lowBound: typing.Union[float, int, None] = None,
+        upBound: typing.Union[float, int, None] = None,
+        cat: typing.Union[str, None] = "Continuous",
     ):
         """
         Creates a variable object to be used in an optimize.Model object
@@ -60,7 +61,7 @@ class ModelUtils(Error):
 
 @type_enforced.Enforcer
 class Model(ModelUtils):
-    def __init__(self, name: str, sense: [str, None]):
+    def __init__(self, name: str, sense: typing.Union[str, None]):
         """
         Initialize a new optimization model object.
 
@@ -125,7 +126,7 @@ class Model(ModelUtils):
         # Update the __objective_added__ validation attribute
         self.__objective_added__ = True
 
-    def add_constraint(self, fn, name: [str, None] = None):
+    def add_constraint(self, fn, name: typing.Union[str, None] = None):
         """
         Add a constraint function to the current model object. Each model can have unlimited constraints.
 
