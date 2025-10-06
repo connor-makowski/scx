@@ -125,5 +125,5 @@ db.show_info()
 
 # Query the database
 db.query("SELECT * FROM Customers LIMIT 5")
-```
-"""
+```"""
+
