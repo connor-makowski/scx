@@ -49,7 +49,7 @@ Recommended (but Optional) -> Expand this section to setup and activate a virtua
     ```
     - On Windows:
     ```
-    venv\scripts\activate
+    venv\\scripts\\activate
     ```
 </details>
 
@@ -125,4 +125,5 @@ db.show_info()
 
 # Query the database
 db.query("SELECT * FROM Customers LIMIT 5")
-```"""
+```
+"""

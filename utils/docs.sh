@@ -9,8 +9,8 @@ echo "" >> scx/__init__.py
 
 
 # Specify versions for documentation purposes
-VERSION="1.2.1"
-OLD_DOC_VERSIONS="1.1.0 1.0.7"
+VERSION="1.3.0"
+OLD_DOC_VERSIONS="1.2.1 1.1.0 1.0.7"
 export version_options="$VERSION $OLD_DOC_VERSIONS"
 
 # generate the docs for a version function:

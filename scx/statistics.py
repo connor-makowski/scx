@@ -10,8 +10,8 @@ from .utils import Error
 class Summary(Error):
     @staticmethod
     def __get_vector__(
-        vector: tuple[int|float, ...] | list[int|float],
-    ) -> tuple[int|float, ...]:
+        vector: tuple[int | float, ...] | list[int | float],
+    ) -> tuple[int | float, ...]:
         if len(vector) == 0:
             self.exception("The provided vector is empty")
         return tuple(sorted(vector))

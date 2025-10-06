@@ -48,7 +48,7 @@ Recommended (but Optional) -> Expand this section to setup and activate a virtua
     ```
     - On Windows:
     ```
-    venv\scripts\activate
+    venv\\scripts\\activate
     ```
 </details>
 
