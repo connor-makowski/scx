@@ -99,8 +99,11 @@ class Database(Error):
 
         Returns the results of the query in the specified format
         """
-        results = self.con.execute(query).fetchall()
-        headers = [desc[0] for desc in self.con.execute(query).description]
+        cur = self.con.execute(query)
+        results = cur.fetchall()
+        headers = (
+            [desc[0] for desc in cur.description] if cur.description else []
+        )
         if return_type == "list_of_dicts":
             return [dict(zip(headers, row)) for row in results]
         elif return_type == "dict_of_lists":
